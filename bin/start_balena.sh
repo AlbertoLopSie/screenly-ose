@@ -1,32 +1,36 @@
 #!/bin/bash
+APP_REPO="AlbertoLopSie/screenly-ose"
+APP_NAME="screenly"
+APP_FOLDER="screenly"
+APP_DISPLAYNAME="Screenly OSE"
 
 run_setup () {
     mkdir -p \
         /data/.config \
         /data/.config/uzbl \
-        /data/.screenly \
-        /data/screenly \
-        /data/screenly_assets
+        /data/.$APP_FOLDER \
+        /data/$APP_FOLDER \
+        /data/$APP_FOLDER_assets
 
-    cp -n /tmp/screenly/ansible/roles/screenly/files/screenly.conf /data/.screenly/screenly.conf
-    cp -n /tmp/screenly/ansible/roles/screenly/files/default_assets.yml /data/.screenly/default_assets.yml
-    cp -n /tmp/screenly/ansible/roles/screenly/files/screenly.db /data/.screenly/screenly.db
-    cp -n /tmp/screenly/ansible/roles/screenly/files/uzbl-config /data/.config/uzbl/config-screenly
+    cp -n /tmp/$APP_FOLDER/ansible/roles/$APP_FOLDER/files/$APP_NAME.conf /data/.$APP_FOLDER/$APP_NAME.conf
+    cp -n /tmp/$APP_FOLDER/ansible/roles/$APP_FOLDER/files/default_assets.yml /data/.$APP_FOLDER/default_assets.yml
+    cp -n /tmp/$APP_FOLDER/ansible/roles/$APP_FOLDER/files/$APP_FOLDER.db /data/.$APP_FOLDER/$APP_NAME.db
+    cp -n /tmp/$APP_FOLDER/ansible/roles/$APP_FOLDER/files/uzbl-config /data/.config/uzbl/config-$APP_NAME
 
-    cp -rf /tmp/screenly/* /data/screenly/
+    cp -rf /tmp/$APP_FOLDER/* /data/$APP_FOLDER/
 
     if [ -n "${OVERWRITE_CONFIG}" ]; then
         echo "Requested to overwrite Screenly config file."
-        cp /data/screenly/ansible/roles/screenly/files/screenly.conf "/data/.screenly/screenly.conf"
+        cp /data/$APP_FOLDER/ansible/roles/$APP_FOLDER/files/$APP_NAME.conf "/data/.$APP_FOLDER/$APP_NAME.conf"
     fi
 
     # Set management page's user and password from environment variables,
     # but only if both of them are provided. Can have empty values provided.
     if [ -n "${MANAGEMENT_USER+x}" ] && [ -n "${MANAGEMENT_PASSWORD+x}" ]; then
-        sed -i -e "s/^user=.*/user=${MANAGEMENT_USER}/" -e "s/^password=.*/password=${MANAGEMENT_PASSWORD}/" /data/.screenly/screenly.conf
+        sed -i -e "s/^user=.*/user=${MANAGEMENT_USER}/" -e "s/^password=.*/password=${MANAGEMENT_PASSWORD}/" /data/.$APP_FOLDER/$APP_NAME.conf
     fi
 
-    /usr/bin/python /data/screenly/bin/migrate.py
+    /usr/bin/python /data/$APP_FOLDER/bin/migrate.py
 }
 
 run_viewer () {
@@ -62,7 +66,7 @@ run_viewer () {
         sleep 1
     done
 
-    cd /data/screenly
+    cd /data/$APP_FOLDER
     /usr/bin/python viewer.py
 }
 
@@ -71,18 +75,18 @@ run_server () {
 
     export RESIN_UUID=${RESIN_DEVICE_UUID}
 
-    cd /data/screenly
+    cd /data/$APP_FOLDER
     /usr/bin/python server.py
 }
 
 run_websocket () {
-    cd /data/screenly
+    cd /data/$APP_FOLDER
     /usr/bin/python websocket_server_layer.py
 }
 
 run_celery () {
-    cd /data/screenly
-    celery worker -A server.celery -B -n worker@screenly --loglevel=info --schedule /tmp/celerybeat-schedule
+    cd /data/$APP_FOLDER
+    celery worker -A server.celery -B -n worker@$APP_NAME --loglevel=info --schedule /tmp/celerybeat-schedule
 }
 
 if [[ "$SCREENLYSERVICE" = "server" ]]; then

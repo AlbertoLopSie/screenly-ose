@@ -8,8 +8,11 @@ import subprocess
 from contextlib import contextmanager
 import datetime
 
-configdir = os.path.join(os.getenv('HOME'), '.screenly/')
-database = os.path.join(configdir, 'screenly.db')
+APP_FOLDER="screenly"
+APP_NAME="screenly"
+
+configdir = os.path.join(os.getenv('HOME'), '.' + APP_FOLDER + '/')
+database = os.path.join(configdir, APP_NAME + '.db')
 
 comma = ','.join
 quest = lambda l: '=?,'.join(l) + '=?'

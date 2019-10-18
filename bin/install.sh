@@ -4,6 +4,10 @@ WEB_UPGRADE=false
 BRANCH_VERSION=
 MANAGE_NETWORK=
 UPGRADE_SYSTEM=
+APP_REPO="AlbertoLopSie/screenly-ose"
+APP_FOLDER="screenly"
+APP_NAME="screenly"
+APP_DISPLAYNAME="Screenly OSE"
 
 while getopts ":w:b:n:s:" arg; do
   case "${arg}" in
@@ -26,7 +30,7 @@ if [ "$WEB_UPGRADE" = false ]; then
 
   # Make sure the command is launched interactive.
   if ! [ -t 0  ]; then
-    echo -e "Detected old installation command. Please use:\n$ bash <(curl -sL https://www.screenlyapp.com/install-ose.sh)"
+    echo -e "Detected old installation command. Please use:\n$ bash <(curl -sL https://raw.githubusercontent.com/${APP_REPO}/master/bin/install.sh)"
     exit 1
   fi
 
@@ -45,7 +49,7 @@ EOF
   # Reset color
   tput sgr 0
 
-  echo -e "Screenly OSE requires a dedicated Raspberry Pi / SD card.\nYou will not be able to use the regular desktop environment once installed.\n"
+  echo -e "$APP_DISPLAYNAME requires a dedicated Raspberry Pi / SD card.\nYou will not be able to use the regular desktop environment once installed.\n"
   read -p "Do you still want to continue? (y/N)" -n 1 -r -s INSTALL
   if [ "$INSTALL" != 'y' ]; then
     echo
@@ -73,7 +77,7 @@ EOF
       sudo apt install wott-agent
   fi
 
-  echo && read -p "Do you want Screenly to manage your network? This is recommended for most users because this adds features to manage your network. (Y/n)" -n 1 -r -s NETWORK && echo
+  echo && read -p "Do you want $APP_DISPLAYNAME to manage your network? This is recommended for most users because this adds features to manage your network. (Y/n)" -n 1 -r -s NETWORK && echo
 
   echo && read -p "Would you like to perform a full system upgrade as well? (y/N)" -n 1 -r -s UPGRADE && echo
   if [ "$UPGRADE" != 'y' ]; then
@@ -128,10 +132,10 @@ fi
 
 if [ "$WEB_UPGRADE" = false ]; then
   set -x
-  REPOSITORY=${1:-https://github.com/screenly/screenly-ose.git}
+  REPOSITORY=${1:-https://github.com/${APP_REPO}.git}
 else
   set -e
-  REPOSITORY=https://github.com/screenly/screenly-ose.git
+  REPOSITORY=https://github.com/${APP_REPO}.git
 fi
 
 sudo mkdir -p /etc/ansible
@@ -158,8 +162,8 @@ fi
 
 sudo pip install ansible==2.8.2
 
-sudo -u pi ansible localhost -m git -a "repo=$REPOSITORY dest=/home/pi/screenly version=$BRANCH"
-cd /home/pi/screenly/ansible
+sudo -u pi ansible localhost -m git -a "repo=$REPOSITORY dest=/home/pi/$APP_FOLDER version=$BRANCH"
+cd /home/pi/$APP_FOLDER/ansible
 
 sudo -E ansible-playbook site.yml $EXTRA_ARGS
 
@@ -171,7 +175,7 @@ sudo rm -rf /usr/share/man /usr/share/groff /usr/share/info /usr/share/lintian /
 sudo find /usr/share/locale -type f ! -name 'en' ! -name 'de*' ! -name 'es*' ! -name 'ja*' ! -name 'fr*' ! -name 'zh*' -delete
 sudo find /usr/share/locale -mindepth 1 -maxdepth 1 ! -name 'en*' ! -name 'de*' ! -name 'es*' ! -name 'ja*' ! -name 'fr*' ! -name 'zh*' -exec rm -r {} \;
 
-cd /home/pi/screenly && git rev-parse HEAD > /home/pi/.screenly/latest_screenly_sha
+cd /home/pi/$APP_FOLDER && git rev-parse HEAD > /home/pi/.$APP_FOLDER/latest_${APP_NAME}_sha
 sudo chown -R pi:pi /home/pi
 
 # Need a password for commands with sudo
@@ -190,7 +194,7 @@ if [ "$BRANCH" = "master" ] || [ "$BRANCH" = "production" ] && [ "$WEB_UPGRADE" 
   set -e
 fi
 
-echo -e "Screenly version: $(git rev-parse --abbrev-ref HEAD)@$(git rev-parse --short HEAD)\n$(lsb_release -a)" > ~/version.md
+echo -e "$APP_DISPLAYNAME version: $(git rev-parse --abbrev-ref HEAD)@$(git rev-parse --short HEAD)\n$(lsb_release -a)" > ~/version.md
 
 if [ "$WEB_UPGRADE" = false ]; then
   set +x
