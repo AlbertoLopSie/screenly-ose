@@ -136,6 +136,10 @@ class ZmqSubscriber(Thread):
             topic, message = msg.split()
 
             # If the command consists of 2 parts, then the first is the function, the second is the argument
+#
+# TODO: Extract more than one uri argument
+#       process uri in the form 'http://www.somesite.com?param=data&param2=data2
+#
             parts = message.split('&')
             command = parts[0]
             parameter = parts[1] if len(parts) > 1 else None
