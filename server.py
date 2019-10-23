@@ -1478,7 +1478,7 @@ class AssetsControl(Resource):
                     Control commands:
                     next - show next asset
                     previous - show previous asset
-                    asset&asset_id - show asset with `asset_id` id
+                    asset&asset_id&arg1&arg2&argN - show asset with `asset_id` id appending 'args' to the asset url
                     '''
             }
         ],

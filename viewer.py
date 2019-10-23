@@ -85,7 +85,12 @@ def skip_asset(back=False):
 
 
 def navigate_to_asset(asset_id):
-    scheduler.extra_asset = asset_id
+# Added support for array arguments
+    if (isinstance(asset_id, list)):
+        scheduler.extra_asset = asset_id[0]
+        scheduler.extra_asset_args = asset_id[1]
+    else:
+        scheduler.extra_asset = asset_id
     system('pkill -SIGUSR1 -f viewer.py')
 
 
@@ -135,16 +140,17 @@ class ZmqSubscriber(Thread):
             msg = socket.recv()
             topic, message = msg.split()
 
-            # If the command consists of 2 parts, then the first is the function, the second is the argument
 #
-# TODO: Extract more than one uri argument
-#       process uri in the form 'http://www.somesite.com?param=data&param2=data2
+#       Support more than one uri argument
 #
-            parts = message.split('&')
+#       API call arguments in the form 'asset&asset_id&arg1&arg2&arg3'
+#       will invoke urls with form 'http://www.somesite.com&arg1&arg2&arg3'
+#
+            parts = message.split('&', 2)
             command = parts[0]
-            parameter = parts[1] if len(parts) > 1 else None
+            parameters = parts[1:] if len(parts) > 2 else parts[1] if len(parts) > 1 else None
 
-            commands.get(command, commands.get('unknown'))(parameter)
+            commands.get(command, commands.get('unknown'))(parameters)
 
 
 class Scheduler(object):
@@ -155,6 +161,7 @@ class Scheduler(object):
         self.current_asset_id = None
         self.deadline = None
         self.extra_asset = None
+        self.extra_asset_args = None
         self.index = 0
         self.reverse = 0
         self.update_playlist()
@@ -167,9 +174,11 @@ class Scheduler(object):
             if asset and asset['is_processing'] == 0:
                 self.current_asset_id = self.extra_asset
                 self.extra_asset = None
+                asset.uri_args = self.extra_asset_args
                 return asset
             logging.error("Asset not found or processed")
             self.extra_asset = None
+            self.extra_asset_args = None
 
         self.refresh_playlist()
         logging.debug('get_next_asset after refresh')
@@ -447,9 +456,14 @@ def asset_loop(scheduler):
         sleep(EMPTY_PL_DELAY)
 
     elif path.isfile(asset['uri']) or (not url_fails(asset['uri']) or asset['skip_asset_check']):
-        name, mime, uri = asset['name'], asset['mimetype'], asset['uri']
+        name, mime, uri, uri_args = asset['name'], asset['mimetype'], asset['uri'], asset['uri_args']
+        if (uri_args is None):
+            uri_args = ''
+        else:
+            uri_args = '?' + uri_args
+
         logging.info('Showing asset %s (%s)', name, mime)
-        logging.debug('Asset URI %s', uri)
+        logging.debug('Asset URI %s%s', uri, uri_args)
         watchdog()
 
         if 'image' in mime:
@@ -457,7 +471,7 @@ def asset_loop(scheduler):
         elif 'web' in mime:
             # FIXME If we want to force periodic reloads of repeated web assets, force=True could be used here.
             # See e38e6fef3a70906e7f8739294ffd523af6ce66be.
-            browser_url(uri)
+            browser_url(uri + uri_args)
         elif 'video' or 'streaming' in mime:
             view_video(uri, asset['duration'])
         else:
