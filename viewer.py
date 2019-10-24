@@ -91,6 +91,7 @@ def navigate_to_asset(asset_id):
         scheduler.extra_asset_args = asset_id[1]
     else:
         scheduler.extra_asset = asset_id
+    logging.info("navigate_to_asset %s", asset_id)
     system('pkill -SIGUSR1 -f viewer.py')
 
 
@@ -146,9 +147,11 @@ class ZmqSubscriber(Thread):
 #       API call arguments in the form 'asset&asset_id&arg1&arg2&arg3'
 #       will invoke urls with form 'http://www.somesite.com&arg1&arg2&arg3'
 #
-            parts = message.split('&', 2)
+            parts = message.split('&')
             command = parts[0]
             parameters = parts[1:] if len(parts) > 2 else parts[1] if len(parts) > 1 else None
+            # parameters = parts[1] if len(parts) > 1 else None
+            logging.info("parts: %s, command: %s, parameters: %s", parts, command, parameters)
 
             commands.get(command, commands.get('unknown'))(parameters)
 
@@ -172,9 +175,11 @@ class Scheduler(object):
         if self.extra_asset is not None:
             asset = get_specific_asset(self.extra_asset)
             if asset and asset['is_processing'] == 0:
+                asset['uri_args'] = self.extra_asset_args
                 self.current_asset_id = self.extra_asset
                 self.extra_asset = None
-                asset.uri_args = self.extra_asset_args
+                self.extra_asset_args = None
+                # logging.info('asset: %s', asset)
                 return asset
             logging.error("Asset not found or processed")
             self.extra_asset = None
@@ -456,13 +461,19 @@ def asset_loop(scheduler):
         sleep(EMPTY_PL_DELAY)
 
     elif path.isfile(asset['uri']) or (not url_fails(asset['uri']) or asset['skip_asset_check']):
-        name, mime, uri, uri_args = asset['name'], asset['mimetype'], asset['uri'], asset['uri_args']
-        if (uri_args is None):
-            uri_args = ''
-        else:
-            uri_args = '?' + uri_args
+        name, mime, uri = asset['name'], asset['mimetype'], asset['uri']
 
-        logging.info('Showing asset %s (%s)', name, mime)
+        try:
+            uri_args = '?' + asset['uri_args']
+        except :
+            uri_args = ''
+
+        try:
+            duration = asset['uri_duration']
+        except :
+            duration = asset['duration']
+
+        logging.info('Showing asset %s%s (%s)', name, uri_args, mime)
         logging.debug('Asset URI %s%s', uri, uri_args)
         watchdog()
 
@@ -473,14 +484,13 @@ def asset_loop(scheduler):
             # See e38e6fef3a70906e7f8739294ffd523af6ce66be.
             browser_url(uri + uri_args)
         elif 'video' or 'streaming' in mime:
-            view_video(uri, asset['duration'])
+            view_video(uri, duration)
         else:
             logging.error('Unknown MimeType %s', mime)
 
         if 'image' in mime or 'web' in mime:
-            duration = int(asset['duration'])
             logging.info('Sleeping for %s', duration)
-            sleep(duration)
+            sleep(int(duration))
 
     else:
         logging.info('Asset %s at %s is not available, skipping.', asset['name'], asset['uri'])
