@@ -1478,7 +1478,9 @@ class AssetsControl(Resource):
                     Control commands:
                     next - show next asset
                     previous - show previous asset
-                    asset&asset_id&arg1&arg2&argN - show asset with `asset_id` id appending 'args' to the asset url
+                    asset&asset_id&[duration=nnn]arg1&arg2&argN - show asset with `asset_id` id 
+                        appending 'args' to the asset url. If first arg is `duration` (secs) it 
+                        overrides default asset duration 
                     '''
             }
         ],

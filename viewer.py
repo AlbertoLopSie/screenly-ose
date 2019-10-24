@@ -88,10 +88,10 @@ def navigate_to_asset(asset_id):
 # Added support for array arguments
     if (isinstance(asset_id, list)):
         scheduler.extra_asset = asset_id[0]
-        scheduler.extra_asset_args = asset_id[1]
+        scheduler.extra_asset_args = asset_id[1:]
     else:
         scheduler.extra_asset = asset_id
-    logging.info("navigate_to_asset %s", asset_id)
+    # logging.info("navigate_to_asset %s", asset_id)
     system('pkill -SIGUSR1 -f viewer.py')
 
 
@@ -150,8 +150,7 @@ class ZmqSubscriber(Thread):
             parts = message.split('&')
             command = parts[0]
             parameters = parts[1:] if len(parts) > 2 else parts[1] if len(parts) > 1 else None
-            # parameters = parts[1] if len(parts) > 1 else None
-            logging.info("parts: %s, command: %s, parameters: %s", parts, command, parameters)
+            # logging.info("parts: %s, command: %s, parameters: %s", parts, command, parameters)
 
             commands.get(command, commands.get('unknown'))(parameters)
 
@@ -464,13 +463,15 @@ def asset_loop(scheduler):
         name, mime, uri = asset['name'], asset['mimetype'], asset['uri']
 
         try:
-            uri_args = '?' + asset['uri_args']
+            uri_args = asset['uri_args']
+
+            hasDur = re.search(r'duration=(\d*)&', uri_args)
+            if match:
+                duration = match.group(1)
+                uri_args = uri_args[:hasDur.start(0)] + uri_args[hasDur.end(0):]
+            uri_args = '?' + uri_args
         except :
             uri_args = ''
-
-        try:
-            duration = asset['uri_duration']
-        except :
             duration = asset['duration']
 
         logging.info('Showing asset %s%s (%s)', name, uri_args, mime)
