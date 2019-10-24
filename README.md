@@ -3,6 +3,8 @@
 
 # Screenly OSE - Digital Signage for the Raspberry Pi
 
+### This custom version adds some extra functionality in asset/control commands to allow for parameter passing in urls
+
 [Which Screenly version is right for me?](https://www.screenly.io/screenly-ose-vs-pro/)
 
 **PLEASE NOTE:** Screenly OSE and the commercial version of Screenly (formerly known as Screenly Pro) are **two completely separate products**. They **do not share any code base and behave very differently** both with regards to management and performance. Hence do not use one to evaluate the other.
@@ -58,9 +60,10 @@ Assuming you're in the source code repository, simply run:
 $ docker run --rm -it \
     --name=screenly-dev \
     -e 'LISTEN=0.0.0.0' \
+    -e 'SWAGGER_HOST=127.0.0.1:8080' \
     -p 8080:8080 \
     -v $(pwd):/home/pi/screenly \
-    screenly/ose-dev-server
+    albertols/screenly-ose-dev-server
 ```
 
 ## Running the Unit Tests
