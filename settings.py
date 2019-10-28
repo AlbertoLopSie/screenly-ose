@@ -17,7 +17,7 @@ CONFIG_DIR = '.screenly/'
 CONFIG_FILE = 'screenly.conf'
 DEFAULTS = {
     'main': {
-        'analytics_opt_out': False,
+        'analytics_opt_out': True,
         'assetdir': 'screenly_assets',
         'database': CONFIG_DIR + 'screenly.db',
         'date_format': 'mm/dd/yyyy',

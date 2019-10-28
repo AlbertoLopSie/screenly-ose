@@ -57,7 +57,7 @@ CELERY_BROKER_URL = getenv('CELERY_BROKER_URL', 'amqp://')
 
 app = Flask(__name__)
 CORS(app)
-api = Api(app, api_version="v1", title="Screenly OSE API")
+api = Api(app, api_version="v1", title="Digicard Screenly OSE API")
 
 celery = Celery(app.name, backend=CELERY_RESULT_BACKEND, broker=CELERY_BROKER_URL)
 
