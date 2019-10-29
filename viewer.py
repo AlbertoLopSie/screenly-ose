@@ -85,7 +85,7 @@ def skip_asset(back=False):
 
 
 def navigate_to_asset(asset_id):
-# Added support for array arguments
+    # Added support for array arguments
     if (isinstance(asset_id, list)):
         scheduler.extra_asset = asset_id[0]
         scheduler.extra_asset_args = asset_id[1]
@@ -465,12 +465,12 @@ def asset_loop(scheduler):
         try:
             uri_args = asset['uri_args']
 
-            hasDur = re.search('duration=(\d*)&', uri_args)
+            hasDur = re.search(r'duration=(\d*)&', uri_args)
             if hasDur:
                 duration = hasDur.group(1)
                 uri_args = uri_args[:hasDur.start(0)] + uri_args[hasDur.end(0):]
             uri_args = '?' + uri_args
-        except :
+        except:
             uri_args = ''
             duration = asset['duration']
 

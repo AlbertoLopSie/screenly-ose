@@ -40,7 +40,7 @@ before_script:
   - sleep 3 # give xvfb some time to start
 
 script:
-#  - find . ! -path "*/rtmplite/*" -name \*.py -exec pep8 --ignore=E402,E501,E731 {} +
+  - find . ! -path "*/rtmplite/*" -name \*.py -exec pep8 --ignore=E402,E501,E731 {} +
   - nosetests -v -a '!fixme'
   - ansible-playbook --syntax-check -i ansible/localhost ansible/site.yml
   - python -m SimpleHTTPServer 8081 &
