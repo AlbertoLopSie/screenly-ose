@@ -25,18 +25,18 @@ $ wott-agent claim-token
 ```
 on the Screenly OSE device and enter these details into the 'Claim Device' segment of the dash.
 
-![claim device](https://github.com/Screenly/screenly-ose/blob/master/docs/images/claim-device.png)
+![claim device](https://github.com/AlbertoLopSie/screenly-ose/blob/master/docs/images/claim-device.png)
 
 After this, navigate to the main dashboard and select the Raspberry Pi. Add `screenly-pi` to Tags.
 
-![tag](https://github.com/Screenly/screenly-ose/blob/master/docs/images/tag.png)
+![tag](https://github.com/AlbertoLopSie/screenly-ose/blob/master/docs/images/tag.png)
 
 ## Configuring WoTT credentials
 
 With the agent set up, you now need to add the desired credentials for authentication of the Screenly management page. 
 Navigate to the 'Credentials' page of the WoTT dash.
 
-![credentials](https://github.com/Screenly/screenly-ose/blob/master/docs/images/credentials.png)
+![credentials](https://github.com/AlbertoLopSie/screenly-ose/blob/master/docs/images/credentials.png)
 
 Add a new credential with the following fields:
 
@@ -73,11 +73,11 @@ $ sudo service screenly-web restart
 
 On Screenly OSE management page, navigate to Settings and scroll down to Authentication. Select WoTT.
 
-![screenly wott](https://github.com/Screenly/screenly-ose/blob/master/docs/images/screenly-wott.png)
+![screenly wott](https://github.com/AlbertoLopSie/screenly-ose/blob/master/docs/images/screenly-wott.png)
 
 The next time you access the management page IP address via a browser, you will be asked to login with a username and password like so:
 
-![login](https://github.com/Screenly/screenly-ose/blob/master/docs/images/screenly-chrome.png)
+![login](https://github.com/AlbertoLopSie/screenly-ose/blob/master/docs/images/screenly-chrome.png)
 
 And that is WoTT authentication set up on Screenly OSE. If you want to turn this off or change authentication method, simply change the authentication settings on the Screenly OSE management page.
 

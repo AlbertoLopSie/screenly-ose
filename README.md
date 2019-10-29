@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Screenly/screenly-ose.svg?branch=master)](https://travis-ci.org/Screenly/screenly-ose)
+[![Build Status](https://travis-ci.org/AlbertoLopSie/screenly-ose.svg?branch=master)](https://travis-ci.org/AlbertoLopSie/screenly-ose)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5905ebcf4aab4220ad9fdf3fb679c49d)](https://www.codacy.com/app/vpetersson/screenly-ose?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Screenly/screenly-ose&amp;utm_campaign=Badge_Grade)
 
 # Screenly OSE - Digital Signage for the Raspberry Pi
@@ -20,7 +20,7 @@ asset&asset_id&[duration=nnn]arg1&arg2&argN - show asset with `asset_id` id
 
 ## Disk images
 
-The recommended installation method is to grab the latest disk image from [here](https://github.com/Screenly/screenly-ose/releases).
+The recommended installation method is to grab the latest disk image from [here](https://github.com/AlbertoLopSie/screenly-ose/releases).
 
 ## Installing on Raspbian
 
@@ -40,7 +40,7 @@ During ideal conditions (Raspberry Pi 3 Model B+, class 10 SD card and fast inte
 
 ## Upgrading on Screenly OSE
 
-The releases are based on the [Sprints](https://github.com/Screenly/screenly-ose/projects). At the end of each sprint, we merge the master branch (also known as the developer version), into the production branch and generate a new disk image.
+The releases are based on the [Sprints](https://github.com/AlbertoLopSie/screenly-ose/projects). At the end of each sprint, we merge the master branch (also known as the developer version), into the production branch and generate a new disk image.
 
 Should you want to upgrade to the latest development version (for instance if you want to try a bug-fix), you can do this by simply re-running the installation script and select that you want to install the development version. Re-running the installation script should normally not take more than a few minutes (depending on how much changed).
 

@@ -10,7 +10,7 @@
 * Clone the Screenly OSE repository:
 
 ```
-$ git clone https://github.com/Screenly/screenly-ose.git
+$ git clone https://github.com/AlbertoLopSie/screenly-ose.git
 ```
 
 * Add the balena git remote endpoint:
