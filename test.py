@@ -25,9 +25,10 @@ def command_not_found():
 def send_current_asset_id_to_server():
     print('=>send_current_asset_id_to_server()')
 
-d
-ef load_settings():
+
+def load_settings():
     print('=>load_settings()')
+
 
 commands = {
     'next': lambda _: skip_asset(),
