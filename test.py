@@ -1,25 +1,32 @@
 import re
 
+
 def skip_asset(back=False):
     print('=>skip_asset({})'.format(back))
 
+
 def navigate_to_asset(asset_id):
-    #isinstance(asset_id, list)
+    # isinstance(asset_id, list)
     print('=>navigate_to_asset({})'.format(asset_id))
+
 
 def stop_loop():
     print('=>stop_loop()')
 
+
 def play_loop():
     print('=>play_loop()')
+
 
 def command_not_found():
     print('=>command_not_found()')
 
+
 def send_current_asset_id_to_server():
     print('=>send_current_asset_id_to_server()')
 
-def load_settings():
+d
+ef load_settings():
     print('=>load_settings()')
 
 commands = {
@@ -35,8 +42,7 @@ commands = {
 
 
 def run(message):
-
-#    print('parms:{}'.format(message.split('&', 2)))
+    # print('parms:{}'.format(message.split('&', 2)))
 
     # if (message.find('?') != -1):
     #     parts = message.split('?')
@@ -44,8 +50,6 @@ def run(message):
     # else:
     #     parts = message.split('&')
     #     parameters = parts[1] if len(parts) > 1 else None
-  
-
     parts = message.split('&')
     command = parts[0]
 
@@ -72,8 +76,6 @@ def run(message):
         rejoin2 = rejoin2[:start] + rejoin2[end:]
         print 'found duration in rejoin2! {}, start: {}, end: {}, rejoin2: {}'.format(duration, start, end, rejoin2)
 
-
-
     if ('duration' in message):
         print 'found duration in message!'
 
@@ -91,4 +93,4 @@ def run(message):
 # run('asset&id_767676&another')
 # run('asset&id_767676&another&a_third')
 run('asset&id_767676&duration=25&another&a_third&fourth')
-#run('asset?id_767676&another&a_third')
+# run('asset?id_767676&another&a_third')
