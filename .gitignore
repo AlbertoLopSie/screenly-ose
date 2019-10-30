@@ -30,6 +30,8 @@ pip-log.txt
 *.swp
 
 .DS_Store
+._.DS_Store
+._gsearch.txt
 .fseventsd/*
 .Spotlight-V100/*
 .sass-cache/*
